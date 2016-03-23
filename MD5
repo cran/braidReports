@@ -1,0 +1,14 @@
+b56c264a963b250ce37f62a28830d96a *DESCRIPTION
+237125a47a342f0d9a3d83f14a9a5640 *NAMESPACE
+0e1b56277691b2ea7d7d6d37998df663 *R/braidReports.R
+7413ed73b972b1df0c402e5b906d191a *R/responseMap.R
+2f19f7d06045607c5c48c78e034ec571 *R/voronoi.R
+cb6641554f52bb22ac9d6160d5779aab *data/es8analysis.rda
+5d8de915a4a0ad76251115cb241a59a0 *man/braidReports-package.Rd
+f3f6f82bd993bfd6195d7630c4f0d3c3 *man/calculateIAE.Rd
+92c53158d9d729c4ae4866be6a55b7a1 *man/es8analysis.Rd
+129b0e7bd7e5c8d48e7416992c3384f7 *man/formatResponseMap.Rd
+2d1aae2737e67acac5c103b2b33bad8b *man/makeBRAIDreport.Rd
+5bee1f80d9f9fa9cbbe4b13ffff59b5c *man/potentiationPlot.Rd
+0643b1bca63146ce986a692ea8926f6d *man/responseMap.Rd
+eec4c53bf49a55056f87ff8c2716fa6b *man/voronoi.Rd
