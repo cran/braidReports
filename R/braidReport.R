@@ -9,7 +9,7 @@
 #' two compounds tested in the combination
 #' @param levels Two levels at which the IAE should be evaluated
 #' @param limits Two values representing the maximal achievable concentrations
-#' for the compounds tested, used to esitmate the IAE
+#' for the compounds tested, used to estimate the IAE
 #' @param control A named list of additional control parameters adjusting the
 #' appearance of the resulting report
 #'
@@ -17,7 +17,7 @@
 #' This function attempts, however foolhardily, to encompass many of the
 #' details, plots, and values that the user might wish to report for a complete
 #' BRAID analysis of a given drug combination.  All reports are built for a
-#' single 8.5-by-11 inch page, either in landscape or potrait orientation, but
+#' single 8.5-by-11 inch page, either in landscape or portrait orientation, but
 #' reports can be customized to contain more or less information.  Here is a
 #' full list of what *can* appear in the BRAID report:
 #'
@@ -226,15 +226,25 @@ makeBraidReport <- function(analysis,compounds,levels,limits,control=list()) {
 	additivePar[["kappa"]] <- 0
 	if (!is.null(analysis$hillFit1)) {
 		hpar1 <- stats::coef(analysis$hillFit1)
+		additivePar[c("IDMA","na")] <- hpar1[c("IDM","n")]
 		if (sign(additiveDir*(hpar1[["Ef"]]-additivePar[["E0"]]))>=0) {
-			additivePar[c("IDMA","na","EfA")] <- hpar1[c("IDM","n","Ef")]
+			additivePar[["EfA"]] <- hpar1[["Ef"]]
+		} else {
+			additivePar[["EfA"]] <- additivePar[["E0"]]
 		}
+	} else if (sign(additiveDir*(additivePar[["EfA"]]-additivePar[["E0"]]))<0) {
+		additivePar[["EfA"]] <- additivePar[["E0"]]
 	}
 	if (!is.null(analysis$hillFit2)) {
 		hpar2 <- stats::coef(analysis$hillFit2)
+		additivePar[c("IDMB","nb")] <- hpar2[c("IDM","n")]
 		if (sign(additiveDir*(hpar2[["Ef"]]-additivePar[["E0"]]))>=0) {
-			additivePar[c("IDMB","nb","EfB")] <- hpar2[c("IDM","n","Ef")]
+			additivePar[["EfB"]] <- hpar2[["Ef"]]
+		} else {
+			additivePar[["EfB"]] <- additivePar[["E0"]]
 		}
+	} else if (sign(additiveDir*(additivePar[["EfB"]]-additivePar[["E0"]]))<0) {
+		additivePar[["EfB"]] <- additivePar[["E0"]]
 	}
 	additivePar[["Ef"]] <- additiveDir*max(additiveDir*additivePar[c("EfA","EfB")])
 
@@ -302,8 +312,13 @@ makeBraidReport <- function(analysis,compounds,levels,limits,control=list()) {
 		stop("Control parameter \"fillscale\" must be ggplot2 fill scale,")
 	}
 
-	valrange <- range(c(mainDF$act,mainDF$afit,mainDF$bfit))
-	errrange <- range(c(mainDF$aerror,mainDF$berror))
+	if (control$layout=="dense") {
+		valrange <- range(c(mainDF$act,mainDF$afit,mainDF$bfit))
+		errrange <- range(c(mainDF$aerror,mainDF$berror))
+	} else {
+		valrange <- range(c(mainDF$act,mainDF$bfit))
+		errrange <- range(c(mainDF$berror))
+	}
 	blankdf <- data.frame(conc1=stats::median(mainDF$conc1,na.rm=TRUE),
 						  conc2=stats::median(mainDF$conc2,na.rm=TRUE),
 						  act=valrange,bfit=valrange,afit=valrange,
@@ -798,6 +813,7 @@ recastPositionScale <- function(oldScale,dimension="x") {
 recastFillScale <- function(colorscale) {
 	discrete_scale(
 		"fill",
+		scale_name = "fill",
 		palette=colorscale$palette,
 		name=colorscale$name,
 		breaks=colorscale$breaks,
@@ -882,7 +898,7 @@ runBraidAnalysis.default <- function(formula,data,defaults,weights=NULL,start=NU
 		if (is.null(start)) { start_r1 <- NULL }
 		else { start_r1 <- c(start[c(1,3)],defaults) }
 		if (is.null(lower)) { lower_r1 <- NULL }
-		else { upper_r1 <- lower[c(1,3,6,7)] }
+		else { lower_r1 <- lower[c(1,3,6,7)] }
 		if (is.null(lower)) { upper_r1 <- NULL }
 		else { upper_r1 <- upper[c(1,3,6,7)] }
 		hfit1 <- basicdrm::findBestHillModel(conc_r1,act_r1,defaults,weights_r1,start_r1,
@@ -897,7 +913,7 @@ runBraidAnalysis.default <- function(formula,data,defaults,weights=NULL,start=NU
 		if (is.null(start)) { start_r2 <- NULL }
 		else { start_r2 <- c(start[c(2,4)],defaults) }
 		if (is.null(lower)) { lower_r2 <- NULL }
-		else { upper_r2 <- lower[c(2,4,6,8)] }
+		else { lower_r2 <- lower[c(2,4,6,8)] }
 		if (is.null(lower)) { upper_r2 <- NULL }
 		else { upper_r2 <- upper[c(2,4,6,8)] }
 		hfit2 <- basicdrm::findBestHillModel(conc_r2,act_r2,defaults,weights_r2,start_r2,

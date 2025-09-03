@@ -16,7 +16,7 @@ two compounds tested in the combination}
 \item{levels}{Two levels at which the IAE should be evaluated}
 
 \item{limits}{Two values representing the maximal achievable concentrations
-for the compounds tested, used to esitmate the IAE}
+for the compounds tested, used to estimate the IAE}
 
 \item{control}{A named list of additional control parameters adjusting the
 appearance of the resulting report}
@@ -34,7 +34,7 @@ for a single combination.
 This function attempts, however foolhardily, to encompass many of the
 details, plots, and values that the user might wish to report for a complete
 BRAID analysis of a given drug combination.  All reports are built for a
-single 8.5-by-11 inch page, either in landscape or potrait orientation, but
+single 8.5-by-11 inch page, either in landscape or portrait orientation, but
 reports can be customized to contain more or less information.  Here is a
 full list of what \emph{can} appear in the BRAID report:
 \itemize{
